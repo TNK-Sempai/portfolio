@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=Instrument+Sans:ital,wght@0,300;0,400;0,500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styleCompteur.css">
+    <title>Compteur JS</title>
+</head>
+<body>
+
+    <div id="cur"></div>
+    <div id="cur-ring"></div>
+
+    <a href="projects.html" class="back-link">← Portfolio</a>
+
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <section>
+
+        <div class="eyebrow">
+            <div class="eyebrow-dot"></div>
+            <span class="eyebrow-text">Exercice JavaScript</span>
+        </div>
+
+        <h1>Compteur JS</h1>
+
+        <div class="counter-display">
+            <span class="counter-label">Valeur actuelle</span>
+            <p class="zero" id="count">0</p>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="bouton">
+            <button class="bouton1" onclick="add(100)">+ 100</button>
+            <button class="bouton1" onclick="add(10)">+ 10</button>
+            <button class="bouton1" onclick="add(1)">+</button>
+            <button class="bouton2" onclick="add(-1)">−</button>
+            <button class="bouton2" onclick="add(-10)">− 10</button>
+            <button class="bouton2" onclick="add(-100)">− 100</button>
+        </div>
+
+        <div class="bouton">
+            <button class="bouton3" onclick="reset()">Reset</button>
+        </div>
+
+    </section>
+
+    <script>
+        let count = 0;
+
+        function add(n) {
+            count += n;
+            update();
+        }
+
+        function reset() {
+            count = 0;
+            update();
+        }
+
+        function update() {
+            const el = document.getElementById('count');
+            el.textContent = count;
+            el.className = count > 0 ? 'positive' : count < 0 ? 'negative' : 'zero';
+        }
+
+        // Custom cursor
+        const cur = document.getElementById('cur');
+        const ring = document.getElementById('cur-ring');
+        let mx = 0, my = 0, rx = 0, ry = 0;
+        document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+        (function loop() {
+            rx += (mx - rx) * .18;
+            ry += (my - ry) * .18;
+            cur.style.left  = mx + 'px';
+            cur.style.top   = my + 'px';
+            ring.style.left = rx + 'px';
+            ring.style.top  = ry + 'px';
+            requestAnimationFrame(loop);
+        })();
+    </script>
+</body>
+</html>
