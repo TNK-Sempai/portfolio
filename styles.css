@@ -479,6 +479,32 @@ img.tanuki {
 }
 .strip-arrow span:hover { border-color:var(--muted); color:var(--text); }
 
+/* ─── WIDGETS ─── */
+#widgets { border-top:1px solid var(--border); }
+.widgets-grid {
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap:1.5rem;
+  margin-top:3rem;
+}
+.widget-card {
+  background:var(--bg); border:1px solid var(--border);
+  border-radius:2px; overflow:hidden;
+  transition: border-color .3s, transform .4s cubic-bezier(.25,.46,.45,.94), box-shadow .4s;
+  cursor:none;
+}
+.widget-card:hover {
+  border-color:rgba(200,240,96,.25); transform:translateY(-6px);
+  box-shadow:0 30px 60px -15px rgba(0,0,0,.5), 0 0 0 1px rgba(200,240,96,.05);
+}
+.widget-card:hover .proj-thumb-bg { transform:scale(1.06); filter:brightness(1.1); }
+@media (max-width:900px) {
+  .widgets-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width:600px) {
+  .widgets-grid { grid-template-columns: 1fr; }
+}
+
 /* ─── SKILLS ─── */
 #skills { border-top:1px solid var(--border); }
 .skills-grid { display:grid; grid-template-columns:1fr 1.6fr; gap:7rem; align-items:start; }
