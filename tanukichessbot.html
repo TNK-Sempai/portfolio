@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TanukiChessBot — Tanuki Sempaï</title>
+    <link rel="icon" type="image/png" href="img/Nouveau projet.png" sizes="32x32">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="styles.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Instrument+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap"
+        rel="stylesheet">
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <style>
+        .cb-hero {
+            min-height: 80vh;
+            padding: 10rem 3.5rem 4rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            position: relative;
+            overflow: hidden
+        }
+
+        .cb-hero-bg {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            background: radial-gradient(ellipse at 70% 30%, rgba(200, 240, 96, .06) 0%, transparent 60%), radial-gradient(ellipse at 20% 80%, rgba(100, 140, 255, .03) 0%, transparent 50%)
+        }
+
+        .cb-hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 900px
+        }
+
+        .cb-eyebrow {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: fu .5s .3s forwards
+        }
+
+        .cb-eyebrow-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--accent);
+            border-radius: 50%
+        }
+
+        .cb-eyebrow-text {
+            font-family: var(--font-mono);
+            font-size: .7rem;
+            letter-spacing: .22em;
+            text-transform: uppercase;
+            color: var(--accent)
+        }
+
+        .cb-eyebrow-line {
+            flex: 1;
+            max-width: 80px;
+            height: 1px;
+            background: rgba(200, 240, 96, .25)
+        }
+
+        .cb-title {
+            font-family: var(--font-display);
+            font-size: clamp(4rem, 10vw, 9rem);
+            line-height: .9;
+            letter-spacing: .025em;
+            opacity: 0;
+            animation: fu .7s .5s forwards
+        }
+
+        .cb-title span {
+            color: var(--accent)
+        }
+
+        .cb-subtitle {
+            max-width: 520px;
+            font-size: .95rem;
+            color: var(--muted2);
+            line-height: 1.75;
+            margin-top: 2rem;
+            border-left: 1px solid rgba(200, 240, 96, .2);
+            padding-left: 1.5rem;
+            opacity: 0;
+            animation: fu .6s .8s forwards
+        }
+
+        .cb-hero-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            font-family: var(--font-mono);
+            font-size: .72rem;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            padding: .55rem 1.4rem;
+            margin-top: 2rem;
+            border: 1px solid rgba(200, 240, 96, .3);
+            color: var(--accent);
+            text-decoration: none;
+            border-radius: 2px;
+            transition: all .25s;
+            opacity: 0;
+            animation: fu .6s 1s forwards
+        }
+
+        .cb-hero-cta:hover {
+            background: var(--accent);
+            color: var(--bg)
+        }
+
+        .cb-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2px;
+            margin-top: 3rem;
+            opacity: 0;
+            animation: fu .6s 1.2s forwards
+        }
+
+        .cb-stat {
+            background: var(--surface);
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            text-align: center;
+            transition: border-color .3s
+        }
+
+        .cb-stat:hover {
+            border-color: rgba(200, 240, 96, .2)
+        }
+
+        .cb-stat-num {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            color: var(--accent);
+            line-height: 1
+        }
+
+        .cb-stat-label {
+            font-family: var(--font-mono);
+            font-size: .6rem;
+            letter-spacing: .2em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-top: .25rem
+        }
+
+        .cb-live-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            font-family: var(--font-mono);
+            font-size: .6rem;
+            letter-spacing: .2em;
+            color: var(--muted);
+            margin-bottom: 1rem
+        }
+
+        .cb-live-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #ff3333;
+            animation: pulse-d 1.5s infinite
+        }
+
+        .cb-live-dot.on {
+            background: var(--accent)
+        }
+
+        @keyframes pulse-d {
+
+            0%,
+            100% {
+                opacity: 1
+            }
+
+            50% {
+                opacity: .3
+            }
+        }
+
+        .cb-section {
+            padding: 6rem 3.5rem
+        }
+
+        .cb-about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: start;
+            margin-top: 2rem
+        }
+
+        .cb-about-text {
+            color: var(--muted2);
+            line-height: 2
+        }
+
+        .cb-about-text strong {
+            color: var(--text)
+        }
+
+        .cb-features {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem
+        }
+
+        .cb-feat {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 1.25rem;
+            transition: border-color .3s
+        }
+
+        .cb-feat:hover {
+            border-color: rgba(200, 240, 96, .2)
+        }
+
+        .cb-feat-icon {
+            font-size: 1.5rem;
+            margin-bottom: .5rem
+        }
+
+        .cb-feat h4 {
+            font-family: var(--font-display);
+            font-size: .9rem;
+            letter-spacing: .12em;
+            color: var(--text)
+        }
+
+        .cb-feat p {
+            font-size: .7rem;
+            color: var(--muted);
+            margin-top: .2rem
+        }
+
+        .cb-arch-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: .5rem;
+            flex-wrap: wrap;
+            padding: 2rem 0
+        }
+
+        .cb-arch-node {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: .75rem 1.2rem;
+            font-family: var(--font-display);
+            font-size: .8rem;
+            letter-spacing: .12em;
+            color: var(--text);
+            transition: border-color .3s
+        }
+
+        .cb-arch-node:hover {
+            border-color: rgba(200, 240, 96, .3)
+        }
+
+        .cb-arch-node.hl {
+            border-color: rgba(200, 240, 96, .2);
+            color: var(--accent)
+        }
+
+        .cb-arch-arrow {
+            color: var(--muted);
+            font-size: 1rem
+        }
+
+        .cb-stack-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2px
+        }
+
+        .cb-stack-item {
+            background: var(--surface);
+            padding: 1.5rem;
+            border-left: 2px solid transparent;
+            transition: border-color .3s, background .3s
+        }
+
+        .cb-stack-item:hover {
+            border-left-color: var(--accent);
+            background: var(--surface2)
+        }
+
+        .cb-stack-item h4 {
+            font-family: var(--font-display);
+            font-size: .85rem;
+            letter-spacing: .12em;
+            color: var(--accent)
+        }
+
+        .cb-stack-item p {
+            font-size: .7rem;
+            color: var(--muted);
+            margin-top: .2rem
+        }
+
+        .cb-avatars-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem
+        }
+
+        .cb-avatar-card {
+            position: relative;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            transition: border-color .3s, transform .3s
+        }
+
+        .cb-avatar-card:hover {
+            border-color: rgba(200, 240, 96, .2);
+            transform: translateY(-4px)
+        }
+
+        .cb-avatar-canvas {
+            width: 100%;
+            aspect-ratio: 1;
+            background: var(--bg);
+            cursor: grab
+        }
+
+        .cb-avatar-canvas:active {
+            cursor: grabbing
+        }
+
+        .cb-avatar-info {
+            padding: 1rem
+        }
+
+        .cb-avatar-name {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            letter-spacing: .14em;
+            color: var(--text)
+        }
+
+        .cb-avatar-meta {
+            font-family: var(--font-mono);
+            font-size: .6rem;
+            letter-spacing: .1em;
+            color: var(--muted);
+            margin-top: .15rem
+        }
+
+        .cb-avatar-badge {
+            position: absolute;
+            top: .75rem;
+            right: .75rem;
+            font-family: var(--font-display);
+            font-size: .55rem;
+            letter-spacing: .14em;
+            padding: .15rem .5rem;
+            background: var(--accent);
+            color: var(--bg)
+        }
+
+        .cb-avatar-badge.soon {
+            background: var(--surface2);
+            color: var(--muted);
+            border: 1px solid var(--border)
+        }
+
+        .cb-avatar-fallback {
+            width: 100%;
+            aspect-ratio: 1;
+            background: var(--surface2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem
+        }
+
+        .cb-twitch-embed {
+            width: 100%;
+            aspect-ratio: 16/9;
+            border: 1px solid var(--border);
+            background: var(--surface)
+        }
+
+        @media(max-width:768px) {
+            .cb-hero {
+                padding: 8rem 1.5rem 3rem
+            }
+
+            .cb-stats {
+                grid-template-columns: repeat(2, 1fr)
+            }
+
+            .cb-section {
+                padding: 3rem 1.5rem
+            }
+
+            .cb-about-grid {
+                grid-template-columns: 1fr
+            }
+
+            .cb-stack-grid {
+                grid-template-columns: 1fr
+            }
+
+            .cb-arch-flow {
+                flex-direction: column
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="cur"></div>
+    <div id="cur-ring"></div>
+
+    <nav id="nav">
+        <a href="index.html" class="nav-logo">TANUKI</a>
+        <div class="nav-links">
+            <a href="about.html" data-n="01" data-page="about.html">À propos</a>
+            <a href="projects.html" data-n="02" data-page="projects.html">Projets</a>
+            <a href="skills.html" data-n="03" data-page="skills.html">Skills</a>
+            <a href="contact.html" data-n="04" data-page="contact.html">Contact</a>
+        </div>
+        <a href="mailto:thecurioustanuki@gmail.com" class="nav-cta">Disponible →</a>
+        <button class="nav-burger" id="navBurger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </nav>
+    <div class="nav-mobile" id="navMobile">
+        <a href="index.html" data-page="index.html">Accueil</a>
+        <a href="about.html" data-page="about.html">À propos</a>
+        <a href="projects.html" data-page="projects.html">Projets</a>
+        <a href="skills.html" data-page="skills.html">Skills</a>
+        <a href="contact.html" data-page="contact.html">Contact</a>
+        <a href="mailto:thecurioustanuki@gmail.com" class="nav-mobile-cta">Disponible →</a>
+    </div>
+
+    <!-- HERO -->
+    <section class="cb-hero">
+        <div class="cb-hero-bg"></div>
+        <div class="cb-hero-content">
+            <div class="cb-eyebrow">
+                <div class="cb-eyebrow-dot"></div>
+                <span class="cb-eyebrow-text">Stream autonome 24/7</span>
+                <div class="cb-eyebrow-line"></div>
+            </div>
+            <h1 class="cb-title">TANUKI<span>CHESS</span>BOT</h1>
+            <p class="cb-subtitle">Une IA qui joue aux échecs, commente chaque coup à voix haute, anime un avatar 3D et
+                gère le chat Twitch — sans aucune intervention humaine.</p>
+            <a href="https://twitch.tv/tanukicorporation" target="_blank" class="cb-hero-cta">Regarder en live →</a>
+        </div>
+        <div class="cb-live-badge">
+            <div class="cb-live-dot" id="liveDot"></div>
+            <span id="liveLabel">VÉRIFICATION...</span>
+        </div>
+        <div class="cb-stats">
+            <div class="cb-stat">
+                <div class="cb-stat-num" id="sTotal">—</div>
+                <div class="cb-stat-label">Parties jouées</div>
+            </div>
+            <div class="cb-stat">
+                <div class="cb-stat-num" id="sWins">—</div>
+                <div class="cb-stat-label">Victoires</div>
+            </div>
+            <div class="cb-stat">
+                <div class="cb-stat-num" id="sLosses">—</div>
+                <div class="cb-stat-label">Défaites</div>
+            </div>
+            <div class="cb-stat">
+                <div class="cb-stat-num" id="sDraws">—</div>
+                <div class="cb-stat-label">Nuls</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="cb-section">
+        <div class="label reveal"><span class="label-n">01 /</span> Le projet</div>
+        <h2 class="section-h reveal">Un bot<em> entièrement autonome.</em></h2>
+        <div class="cb-about-grid">
+            <div class="cb-about-text reveal">
+                <p><strong>TanukiChessBot</strong> est un système de stream Twitch entièrement automatisé. Un bot IA
+                    joue en continu sur Lichess via Stockfish, commente ses coups avec Ollama, parle à voix haute avec
+                    Kokoro TTS, anime un avatar 3D dans Warudo, et gère le chat Twitch pour accepter les défis des
+                    spectateurs.</p>
+                <br>
+                <p>Le projet couvre l'intégralité du pipeline : de l'API Lichess au rendu OBS, en passant par la
+                    synthèse vocale, les animations WebSocket, les transitions automatiques entre les parties, et un
+                    système de matchmaking intelligent qui trouve des adversaires 24h/24.</p>
+                <br>
+                <p>Tape <strong style="color:var(--accent)">!defi</strong> dans le chat Twitch pour défier le Tanuki. Il
+                    ne dort jamais.</p>
+            </div>
+            <div class="cb-features reveal">
+                <div class="cb-feat">
+                    <div class="cb-feat-icon">♟️</div>
+                    <h4>Stockfish</h4>
+                    <p>Moteur d'échecs — 3s/coup</p>
+                </div>
+                <div class="cb-feat">
+                    <div class="cb-feat-icon">🧠</div>
+                    <h4>Ollama</h4>
+                    <p>Commentaires IA — llama3.1:8b</p>
+                </div>
+                <div class="cb-feat">
+                    <div class="cb-feat-icon">🔊</div>
+                    <h4>Kokoro TTS</h4>
+                    <p>Synthèse vocale locale</p>
+                </div>
+                <div class="cb-feat">
+                    <div class="cb-feat-icon">🎭</div>
+                    <h4>Warudo</h4>
+                    <p>Avatar 3D + WebSocket</p>
+                </div>
+                <div class="cb-feat">
+                    <div class="cb-feat-icon">📺</div>
+                    <h4>OBS</h4>
+                    <p>Transitions auto + overlays</p>
+                </div>
+                <div class="cb-feat">
+                    <div class="cb-feat-icon">💬</div>
+                    <h4>Twitch Chat</h4>
+                    <p>!defi !score !question</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ARCHITECTURE -->
+    <section class="cb-section">
+        <div class="label reveal"><span class="label-n">02 /</span> Architecture</div>
+        <h2 class="section-h reveal">Pipeline<em> complet.</em></h2>
+        <div class="cb-arch-flow reveal">
+            <div class="cb-arch-node hl">Lichess API</div>
+            <div class="cb-arch-arrow">→</div>
+            <div class="cb-arch-node">Python Bot</div>
+            <div class="cb-arch-arrow">→</div>
+            <div class="cb-arch-node">Stockfish</div>
+            <div class="cb-arch-arrow">→</div>
+            <div class="cb-arch-node hl">Ollama</div>
+            <div class="cb-arch-arrow">→</div>
+            <div class="cb-arch-node">Kokoro TTS</div>
+            <div class="cb-arch-arrow">→</div>
+            <div class="cb-arch-node hl">Warudo</div>
+            <div class="cb-arch-arrow">→</div>
+            <div class="cb-arch-node">OBS</div>
+            <div class="cb-arch-arrow">→</div>
+            <div class="cb-arch-node hl">Twitch / YT</div>
+        </div>
+    </section>
+
+    <!-- STACK -->
+    <section class="cb-section">
+        <div class="label reveal"><span class="label-n">03 /</span> Stack technique</div>
+        <h2 class="section-h reveal">Sous le<em> capot.</em></h2>
+        <div class="cb-stack-grid reveal">
+            <div class="cb-stack-item">
+                <h4>Python</h4>
+                <p>berserk, python-chess, twitchio, websocket-client</p>
+            </div>
+            <div class="cb-stack-item">
+                <h4>Stockfish</h4>
+                <p>Moteur d'échecs — 3s/coup, AVX2</p>
+            </div>
+            <div class="cb-stack-item">
+                <h4>Ollama + Llama 3.1</h4>
+                <p>Commentaires IA — anti-répétition</p>
+            </div>
+            <div class="cb-stack-item">
+                <h4>Kokoro ONNX</h4>
+                <p>Text-to-Speech local — voix am_adam</p>
+            </div>
+            <div class="cb-stack-item">
+                <h4>Warudo + VRM</h4>
+                <p>Avatar 3D — 5 animations WebSocket</p>
+            </div>
+            <div class="cb-stack-item">
+                <h4>OBS + WebSocket</h4>
+                <p>Transitions auto, overlays, countdown</p>
+            </div>
+            <div class="cb-stack-item">
+                <h4>Lichess Bot API</h4>
+                <p>Streaming SSE, matchmaking auto</p>
+            </div>
+            <div class="cb-stack-item">
+                <h4>Twitch IRC</h4>
+                <p>Chat bot — !defi, !score, file d'attente</p>
+            </div>
+            <div class="cb-stack-item">
+                <h4>Windows + RTX 3050</h4>
+                <p>Tout local, zéro cloud</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- AVATARS 3D -->
+    <section class="cb-section">
+        <div class="label reveal"><span class="label-n">04 /</span> Personnages</div>
+        <h2 class="section-h reveal">Les<em> avatars.</em></h2>
+        <div class="cb-avatars-grid reveal">
+            <div class="cb-avatar-card">
+                <model-viewer class="cb-avatar-canvas" src="assets/models/Tanuki-vr.glb" auto-rotate camera-controls
+                    interaction-prompt="none" environment-image="neutral" shadow-intensity="0.5"
+                    style="width:100%;aspect-ratio:1;background:var(--bg);">
+                </model-viewer>
+                <div class="cb-avatar-info">
+                    <div class="cb-avatar-name">TANUKI</div>
+                    <div class="cb-avatar-meta">AVATAR PRINCIPAL — VOIX ANGLAISE — AM_ADAM</div>
+                </div>
+                <div class="cb-avatar-badge">ACTIF</div>
+            </div>
+            <div class="cb-avatar-card">
+                <model-viewer class="cb-avatar-canvas" src="assets/models/Kitsune.glb" auto-rotate camera-controls
+                    interaction-prompt="none" environment-image="neutral" shadow-intensity="0.5"
+                    style="width:100%;aspect-ratio:1;background:var(--bg);">
+                </model-viewer>
+                <div class="cb-avatar-info">
+                    <div class="cb-avatar-name">KITSUNE</div>
+                    <div class="cb-avatar-meta">AVATAR SECONDAIRE — VOIX FÉMININE</div>
+                </div>
+                <div class="cb-avatar-badge soon">BIENTÔT</div>
+            </div>
+            <div class="cb-avatar-card">
+                <model-viewer class="cb-avatar-canvas" src="assets/models/tanuki-street.glb" auto-rotate camera-controls
+                    interaction-prompt="none" environment-image="neutral" shadow-intensity="0.5"
+                    style="width:100%;aspect-ratio:1;background:var(--bg);">
+                </model-viewer>
+                <div class="cb-avatar-info">
+                    <div class="cb-avatar-name">TANUKI-CHAN</div>
+                    <div class="cb-avatar-meta">AVATAR ANIME — VOIX JAPONAISE</div>
+                </div>
+                <div class="cb-avatar-badge soon">BIENTÔT</div>
+            </div>
+        </div>
+        <p class="reveal"
+            style="color:var(--muted);margin-top:1.5rem;font-size:.75rem;font-family:var(--font-mono);letter-spacing:.05em;">
+            Modèles VRM générés via Tripo3D — animés dans Warudo via WebSocket. Cliquer-glisser pour faire tourner.
+        </p>
+    </section>
+
+    <!-- TWITCH EMBED -->
+    <section class="cb-section">
+        <div class="label reveal"><span class="label-n">05 /</span> En direct</div>
+        <h2 class="section-h reveal">Le<em> stream.</em></h2>
+        <div class="cb-twitch-embed reveal">
+            <iframe src="https://player.twitch.tv/?channel=tanukicorporation&parent=tnk-sempai.github.io"
+                frameborder="0" allowfullscreen style="width:100%;height:100%;"></iframe>
+        </div>
+    </section>
+
+    <section style="padding:2rem 3.5rem;">
+        <a href="projects.html"
+            style="font-family:var(--font-mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);text-decoration:none;">←
+            Retour aux projets</a>
+    </section>
+
+    <footer>
+        <div class="f-left"><span class="f-logo">LASS</span><span class="f-copy">© 2025 · Tous droits réservés</span>
+        </div>
+        <div class="f-right"><a href="about.html">À propos</a><a href="projects.html">Projets</a><a
+                href="skills.html">Skills</a><a href="contact.html">Contact</a></div>
+    </footer>
+
+    <script src="main.js"></script>
+    <script>
+        /* LICHESS API */
+        async function loadLichessStats() {
+            try {
+                const r = await fetch('https://lichess.org/api/user/TanukiChessBot');
+                const d = await r.json();
+                document.getElementById('sTotal').textContent = d.count?.all || 0;
+                document.getElementById('sWins').textContent = d.count?.win || 0;
+                document.getElementById('sLosses').textContent = d.count?.loss || 0;
+                document.getElementById('sDraws').textContent = d.count?.draw || 0;
+                if (d.online) { document.getElementById('liveDot').classList.add('on'); document.getElementById('liveLabel').textContent = 'BOT EN LIGNE'; }
+                else { document.getElementById('liveLabel').textContent = 'BOT HORS LIGNE'; }
+            } catch (e) { document.getElementById('liveLabel').textContent = 'ERREUR CHARGEMENT'; }
+        }
+        loadLichessStats(); setInterval(loadLichessStats, 30000);
+
+       
+        initAvatar('avatar-tanuki'); initAvatar('avatar-kitsune'); initAvatar('avatar-chan');
+    </script>
+</body>
+
+</html>
