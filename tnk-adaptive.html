@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TNK Adaptive — Tanuki Sempaï</title>
+    <link rel="icon" type="image/png" href="img/Nouveau projet.png" sizes="32x32">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="styles.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Instrument+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap"
+        rel="stylesheet">
+    <style>
+        /* ─── HERO ─── */
+        .ta-hero {
+            min-height: 85vh;
+            padding: 10rem 3.5rem 5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ta-hero-bg {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            background-image: url('img/tnk-logo.png');
+            background-size: cover;
+            background-position: center;
+            opacity: .08;
+        }
+
+        .ta-hero-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            background: linear-gradient(135deg, var(--bg) 40%, rgba(9, 9, 14, .6) 100%);
+        }
+
+        .ta-hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 860px;
+        }
+
+        .ta-eyebrow {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: fu .5s .3s forwards;
+        }
+
+        .ta-eyebrow-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--accent);
+            border-radius: 50%;
+        }
+
+        .ta-eyebrow-text {
+            font-family: var(--font-mono);
+            font-size: .7rem;
+            letter-spacing: .22em;
+            text-transform: uppercase;
+            color: var(--accent);
+        }
+
+        .ta-eyebrow-line {
+            flex: 1;
+            max-width: 80px;
+            height: 1px;
+            background: rgba(200, 240, 96, .25);
+        }
+
+        .ta-title {
+            font-family: var(--font-display);
+            font-size: clamp(4.5rem, 12vw, 11rem);
+            line-height: .9;
+            letter-spacing: .025em;
+            opacity: 0;
+            animation: fu .7s .5s forwards;
+        }
+
+        .ta-title span {
+            color: var(--accent);
+        }
+
+        .ta-subtitle {
+            max-width: 540px;
+            font-size: .95rem;
+            color: var(--muted2);
+            line-height: 1.75;
+            margin-top: 2rem;
+            border-left: 1px solid rgba(200, 240, 96, .2);
+            padding-left: 1.5rem;
+            opacity: 0;
+            animation: fu .6s .8s forwards;
+        }
+
+        .ta-meta {
+            font-family: var(--font-mono);
+            font-size: .68rem;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-top: .75rem;
+            opacity: 0;
+            animation: fu .5s .9s forwards;
+        }
+
+        .ta-hero-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .5rem;
+            margin-top: 1.5rem;
+            opacity: 0;
+            animation: fu .5s 1s forwards;
+        }
+
+        .ta-pill {
+            font-family: var(--font-mono);
+            font-size: .62rem;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            padding: .28rem .65rem;
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            color: var(--muted);
+        }
+
+        .ta-live-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            font-family: var(--font-mono);
+            font-size: .6rem;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            padding: .35rem .9rem;
+            border: 1px solid rgba(200, 240, 96, .3);
+            border-radius: 100px;
+            color: var(--accent);
+            margin-top: 1.2rem;
+            opacity: 0;
+            animation: fu .5s 1.1s forwards;
+        }
+
+        .ta-live-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent);
+            animation: pulse 2s infinite;
+            flex-shrink: 0;
+        }
+
+        .ta-hero-ctas {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            opacity: 0;
+            animation: fu .6s 1.2s forwards;
+        }
+
+        .ta-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: .6rem;
+            font-family: var(--font-mono);
+            font-size: .72rem;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            padding: .6rem 1.5rem;
+            border: 1px solid rgba(200, 240, 96, .3);
+            color: var(--accent);
+            text-decoration: none;
+            border-radius: 2px;
+            transition: all .25s;
+            cursor: none;
+        }
+
+        .ta-cta:hover {
+            background: var(--accent);
+            color: var(--bg);
+        }
+
+        .ta-cta.ghost {
+            border-color: var(--border);
+            color: var(--muted);
+        }
+
+        .ta-cta.ghost:hover {
+            border-color: rgba(200, 240, 96, .35);
+            color: var(--text);
+            background: transparent;
+        }
+
+        /* ─── SECTIONS ─── */
+        .ta-section {
+            padding: 6rem 3.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .ta-section.alt {
+            background: var(--surface);
+        }
+
+        /* ─── FEATURES GRID ─── */
+        .ta-features {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .ta-feat {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 1.6rem;
+            transition: border-color .3s, background .3s;
+        }
+
+        .ta-feat:hover {
+            border-color: rgba(200, 240, 96, .2);
+            background: var(--surface2);
+        }
+
+        .ta-feat-icon {
+            font-size: 1.6rem;
+            margin-bottom: .7rem;
+        }
+
+        .ta-feat h4 {
+            font-family: var(--font-display);
+            font-size: .9rem;
+            letter-spacing: .14em;
+            color: var(--text);
+            margin-bottom: .35rem;
+        }
+
+        .ta-feat p {
+            font-size: .78rem;
+            color: var(--muted);
+            line-height: 1.65;
+        }
+
+        /* ─── TABLE ─── */
+        .ta-table-wrap {
+            overflow-x: auto;
+            margin-top: 2rem;
+        }
+
+        .ta-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 480px;
+        }
+
+        .ta-table th {
+            font-family: var(--font-mono);
+            font-size: .65rem;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            color: var(--accent);
+            text-align: left;
+            padding: .9rem 1.25rem;
+            border-bottom: 1px solid rgba(200, 240, 96, .2);
+        }
+
+        .ta-table td {
+            padding: .9rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+            font-size: .88rem;
+            color: var(--muted2);
+            transition: background .2s;
+        }
+
+        .ta-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .ta-table tbody tr:hover td {
+            background: var(--surface);
+            color: var(--text);
+        }
+
+        .ta-table td:first-child {
+            font-family: var(--font-mono);
+            font-size: .8rem;
+            letter-spacing: .04em;
+            color: var(--text);
+        }
+
+        /* ─── STACK GRID ─── */
+        .ta-stack {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2px;
+            margin-top: 2rem;
+        }
+
+        .ta-stack-item {
+            background: var(--surface);
+            padding: 1.5rem 1.2rem;
+            border-left: 2px solid transparent;
+            transition: border-color .3s, background .3s;
+        }
+
+        .ta-stack-item:hover {
+            border-left-color: var(--accent);
+            background: var(--surface2);
+        }
+
+        .ta-stack-item h4 {
+            font-family: var(--font-display);
+            font-size: .85rem;
+            letter-spacing: .12em;
+            color: var(--accent);
+            margin-bottom: .2rem;
+        }
+
+        .ta-stack-item p {
+            font-size: .68rem;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        /* ─── CODE BLOCK ─── */
+        .ta-code-wrap {
+            position: relative;
+            margin-top: 2rem;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .ta-code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: .75rem 1.25rem;
+            background: rgba(200, 240, 96, .035);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .ta-code-label {
+            font-family: var(--font-mono);
+            font-size: .6rem;
+            letter-spacing: .2em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .ta-copy-btn {
+            font-family: var(--font-mono);
+            font-size: .6rem;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            padding: .28rem .75rem;
+            border: 1px solid var(--border);
+            border-radius: 2px;
+            background: transparent;
+            color: var(--muted);
+            cursor: pointer;
+            transition: all .2s;
+        }
+
+        .ta-copy-btn:hover {
+            border-color: rgba(200, 240, 96, .4);
+            color: var(--accent);
+        }
+
+        .ta-code-wrap pre {
+            padding: 1.5rem 1.25rem;
+            overflow-x: auto;
+            font-family: var(--font-mono);
+            font-size: .78rem;
+            line-height: 1.8;
+            color: var(--text);
+        }
+
+        .ta-code-wrap .cm {
+            color: var(--muted);
+        }
+
+        /* ─── ROADMAP ─── */
+        .ta-roadmap {
+            list-style: none;
+            margin-top: 2rem;
+        }
+
+        .ta-roadmap li {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: .9rem 0;
+            border-bottom: 1px solid var(--border);
+            font-size: .92rem;
+            transition: color .2s;
+        }
+
+        .ta-roadmap li:last-child {
+            border-bottom: none;
+        }
+
+        .ta-roadmap li.done {
+            color: var(--text);
+        }
+
+        .ta-roadmap li.todo {
+            color: var(--muted);
+        }
+
+        .ta-rm-icon {
+            font-size: .88rem;
+            flex-shrink: 0;
+            width: 1.4rem;
+            text-align: center;
+        }
+
+        /* ─── DEMO EMBED ─── */
+        .ta-demo-wrap {
+            margin-top: 2rem;
+            border: 1px solid var(--border);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .ta-demo-placeholder {
+            aspect-ratio: 16/9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            background: var(--surface2);
+        }
+
+        .ta-demo-label {
+            font-family: var(--font-mono);
+            font-size: .68rem;
+            letter-spacing: .16em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        /* ─── SUPPORT ─── */
+        .ta-support-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .ta-wallet {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 1.4rem;
+            border-radius: 2px;
+            transition: border-color .3s;
+        }
+
+        .ta-wallet:hover {
+            border-color: rgba(200, 240, 96, .2);
+        }
+
+        .ta-wallet-label {
+            font-family: var(--font-mono);
+            font-size: .6rem;
+            letter-spacing: .2em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: .55rem;
+        }
+
+        .ta-wallet-addr {
+            font-family: var(--font-mono);
+            font-size: .65rem;
+            letter-spacing: .03em;
+            color: var(--muted2);
+            word-break: break-all;
+            line-height: 1.6;
+            margin-bottom: .9rem;
+        }
+
+        .ta-wallet-btn {
+            font-family: var(--font-mono);
+            font-size: .6rem;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            padding: .3rem .85rem;
+            border: 1px solid var(--border);
+            border-radius: 2px;
+            background: transparent;
+            color: var(--muted);
+            cursor: pointer;
+            transition: all .2s;
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+        }
+
+        .ta-wallet-btn:hover {
+            border-color: rgba(200, 240, 96, .4);
+            color: var(--accent);
+        }
+
+        /* ─── RESPONSIVE ─── */
+        @media(max-width:768px) {
+            .ta-hero {
+                padding: 8rem 1.5rem 3rem;
+            }
+
+            .ta-section {
+                padding: 3.5rem 1.5rem;
+            }
+
+            .ta-features {
+                grid-template-columns: 1fr;
+            }
+
+            .ta-stack {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .ta-support-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media(max-width:480px) {
+            .ta-stack {
+                grid-template-columns: 1fr;
+            }
+
+            .ta-hero-ctas {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="cur"></div>
+    <div id="cur-ring"></div>
+
+    <nav id="nav">
+        <a href="index.html" class="nav-logo">TANUKI</a>
+        <div class="nav-links">
+            <a href="about.html" data-n="01" data-page="about.html">À propos</a>
+            <a href="projects.html" data-n="02" data-page="projects.html">Projets</a>
+            <a href="skills.html" data-n="03" data-page="skills.html">Skills</a>
+            <a href="contact.html" data-n="04" data-page="contact.html">Contact</a>
+        </div>
+        <a href="mailto:thecurioustanuki@gmail.com" class="nav-cta">Disponible →</a>
+        <button class="nav-burger" id="navBurger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </nav>
+    <div class="nav-mobile" id="navMobile">
+        <a href="index.html" data-page="index.html">Accueil</a>
+        <a href="about.html" data-page="about.html">À propos</a>
+        <a href="projects.html" data-page="projects.html">Projets</a>
+        <a href="skills.html" data-page="skills.html">Skills</a>
+        <a href="contact.html" data-page="contact.html">Contact</a>
+        <a href="mailto:thecurioustanuki@gmail.com" class="nav-mobile-cta">Disponible →</a>
+    </div>
+
+    <!-- ─── HERO ─── -->
+    <section class="ta-hero">
+        <div class="ta-hero-bg"></div>
+        <div class="ta-hero-overlay"></div>
+        <div class="ta-hero-content">
+            <div class="ta-eyebrow">
+                <div class="ta-eyebrow-dot"></div>
+                <span class="ta-eyebrow-text">Paper trading algorithmique</span>
+                <div class="ta-eyebrow-line"></div>
+            </div>
+            <h1 class="ta-title">TNK<span> ADAPTIVE</span></h1>
+            <p class="ta-subtitle">Bot de paper trading multi-paires auto-adaptatif</p>
+            <div class="ta-meta">Tanuki Corporation · 2026</div>
+            <div class="ta-hero-pills">
+                <span class="ta-pill">Python</span>
+                <span class="ta-pill">Flask</span>
+                <span class="ta-pill">SQLite</span>
+                <span class="ta-pill">ccxt</span>
+                <span class="ta-pill">TradingView</span>
+            </div>
+            <div class="ta-live-badge">
+                <span class="ta-live-dot"></span>
+                BOT ACTIF · PAPER
+            </div>
+            <div class="ta-hero-ctas">
+                <a href="https://irrigation-southampton-sisters-minus.trycloudflare.com" target="_blank" class="ta-cta">Voir la démo live →</a>
+                <a href="https://github.com/TNK-Sempai/TNK-ADAPTIVE" target="_blank" class="ta-cta ghost">GitHub ↗</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ─── 01 · LE PROJET ─── -->
+    <section class="ta-section">
+        <div class="label reveal"><span class="label-n">01 /</span> Le projet</div>
+        <h2 class="section-h reveal">Un bot qui<em> apprend.</em></h2>
+        <p class="reveal"
+            style="max-width:680px;color:var(--muted2);font-size:.95rem;line-height:1.9;border-left:1px solid rgba(200,240,96,.2);padding-left:1.5rem;">
+            TNK Adaptive est un bot de trading algorithmique open source qui surveille en temps réel le top 50 paires
+            USDT par volume sur Bybit, détecte des signaux d'entrée via RSI + Moving Averages, et apprend
+            automatiquement de ses propres performances.
+        </p>
+    </section>
+
+    <!-- ─── 02 · CE QUE ÇA FAIT ─── -->
+    <section class="ta-section alt">
+        <div class="label reveal"><span class="label-n">02 /</span> Fonctionnalités</div>
+        <h2 class="section-h reveal">Ce que<em> ça fait.</em></h2>
+        <div class="ta-features reveal">
+            <div class="ta-feat">
+                <div class="ta-feat-icon">👁</div>
+                <h4>SURVEILLANCE</h4>
+                <p>Top 50 paires USDT, mis à jour toutes les 5 minutes. Suivi en temps réel des volumes et des mouvements de marché.</p>
+            </div>
+            <div class="ta-feat">
+                <div class="ta-feat-icon">🎯</div>
+                <h4>STRATÉGIE</h4>
+                <p>RSI(14) + MA croisement. Long/Short automatiques. Stop Loss&nbsp;-3%, Take Profit&nbsp;+6%.</p>
+            </div>
+            <div class="ta-feat">
+                <div class="ta-feat-icon">🧠</div>
+                <h4>APPRENTISSAGE</h4>
+                <p>Après 10 trades par paire, ajuste RSI, SL et TP selon win rate. Le bot s'améliore en continu.</p>
+            </div>
+            <div class="ta-feat">
+                <div class="ta-feat-icon">📊</div>
+                <h4>DASHBOARD</h4>
+                <p>Chandelles TradingView en temps réel, positions live, historique complet des trades.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ─── 03 · COMMENT IL APPREND ─── -->
+    <section class="ta-section">
+        <div class="label reveal"><span class="label-n">03 /</span> Moteur adaptatif</div>
+        <h2 class="section-h reveal">Comment il<em> apprend.</em></h2>
+        <div class="ta-table-wrap reveal">
+            <table class="ta-table">
+                <thead>
+                    <tr>
+                        <th>Condition</th>
+                        <th>Ajustement automatique</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Win rate &lt; 40%</td>
+                        <td>RSI rendu plus restrictif</td>
+                    </tr>
+                    <tr>
+                        <td>SL touché &gt; 60%</td>
+                        <td>Stop Loss élargi</td>
+                    </tr>
+                    <tr>
+                        <td>TP touché &gt; 60%</td>
+                        <td>Take Profit augmenté</td>
+                    </tr>
+                    <tr>
+                        <td>PnL moyen négatif</td>
+                        <td>Ratio R:R corrigé</td>
+                    </tr>
+                    <tr>
+                        <td>Win rate &gt; 65%</td>
+                        <td>Paramètres assouplis</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- ─── 04 · STACK TECHNIQUE ─── -->
+    <section class="ta-section alt">
+        <div class="label reveal"><span class="label-n">04 /</span> Stack technique</div>
+        <h2 class="section-h reveal">Sous le<em> capot.</em></h2>
+        <div class="ta-stack reveal">
+            <div class="ta-stack-item">
+                <h4>Python</h4>
+                <p>Cœur du bot — logique de trading, moteur adaptatif</p>
+            </div>
+            <div class="ta-stack-item">
+                <h4>Flask</h4>
+                <p>Serveur web — API REST + Dashboard</p>
+            </div>
+            <div class="ta-stack-item">
+                <h4>SQLite</h4>
+                <p>Persistance trades, paramètres, historique</p>
+            </div>
+            <div class="ta-stack-item">
+                <h4>ccxt</h4>
+                <p>Connexion Bybit — OHLCV, prix, exécution</p>
+            </div>
+            <div class="ta-stack-item">
+                <h4>Pandas</h4>
+                <p>Calcul RSI, moving averages, indicateurs</p>
+            </div>
+            <div class="ta-stack-item">
+                <h4>TradingView Charts</h4>
+                <p>Graphiques chandelles temps réel</p>
+            </div>
+            <div class="ta-stack-item">
+                <h4>Cloudflare Tunnel</h4>
+                <p>Accès distant sécurisé au dashboard local</p>
+            </div>
+            <div class="ta-stack-item">
+                <h4>GitHub</h4>
+                <p>Open source — code complet disponible</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ─── 05 · INSTALLATION ─── -->
+    <section class="ta-section">
+        <div class="label reveal"><span class="label-n">05 /</span> Installation rapide</div>
+        <h2 class="section-h reveal">Démarrer<em> en 60 secondes.</em></h2>
+        <div class="ta-code-wrap reveal">
+            <div class="ta-code-header">
+                <span class="ta-code-label">bash</span>
+                <button class="ta-copy-btn" id="copyBtn" onclick="copyInstall()">Copier</button>
+            </div>
+            <pre><code id="installCode">git clone https://github.com/TNK-Sempai/TNK-ADAPTIVE.git
+cd TNK-ADAPTIVE
+python -m pip install -r requirements.txt
+python main.py
+<span class="cm"># Dashboard → http://localhost:5000</span></code></pre>
+        </div>
+        <p class="reveal"
+            style="margin-top:1.5rem;font-family:var(--font-mono);font-size:.72rem;letter-spacing:.08em;color:var(--muted);display:flex;flex-wrap:wrap;gap:1.5rem;">
+            <span><span style="color:var(--accent);">✓</span>&nbsp; Aucune clé API requise.</span>
+            <span><span style="color:var(--accent);">✓</span>&nbsp; Aucun risque financier.</span>
+        </p>
+    </section>
+
+    <!-- ─── 06 · ROADMAP ─── -->
+    <section class="ta-section alt">
+        <div class="label reveal"><span class="label-n">06 /</span> Roadmap</div>
+        <h2 class="section-h reveal">Ce qui<em> arrive.</em></h2>
+        <ul class="ta-roadmap reveal">
+            <li class="done"><span class="ta-rm-icon">✅</span> Paper trading multi-paires</li>
+            <li class="done"><span class="ta-rm-icon">✅</span> Dashboard chandelles live</li>
+            <li class="done"><span class="ta-rm-icon">✅</span> Moteur adaptatif</li>
+            <li class="done"><span class="ta-rm-icon">✅</span> Persistance SQLite</li>
+            <li class="todo"><span class="ta-rm-icon">⬜</span> Alertes n8n → Discord / Telegram</li>
+            <li class="todo"><span class="ta-rm-icon">⬜</span> Support argent réel</li>
+            <li class="todo"><span class="ta-rm-icon">⬜</span> Backtesting historique</li>
+            <li class="todo"><span class="ta-rm-icon">⬜</span> Docker + VPS</li>
+        </ul>
+    </section>
+
+    <!-- ─── 07 · DASHBOARD LIVE ─── -->
+    <section class="ta-section">
+        <div class="label reveal"><span class="label-n">07 /</span> En direct</div>
+        <h2 class="section-h reveal">Le<em> dashboard.</em></h2>
+        <div class="ta-demo-wrap reveal">
+            <iframe
+                src="https://irrigation-southampton-sisters-minus.trycloudflare.com"
+                frameborder="0"
+                style="width:100%;aspect-ratio:16/9;display:block;"
+                allowfullscreen
+                loading="lazy">
+            </iframe>
+        </div>
+    </section>
+
+    <!-- ─── 08 · SUPPORT ─── -->
+    <section class="ta-section alt">
+        <div class="label reveal"><span class="label-n">08 /</span> Support</div>
+        <h2 class="section-h reveal">Soutenir<em> le projet.</em></h2>
+        <div class="ta-support-grid reveal">
+            <div class="ta-wallet">
+                <div class="ta-wallet-label">Ko-fi</div>
+                <div class="ta-wallet-addr">ko-fi.com/tanukisempai</div>
+                <a href="https://ko-fi.com/tanukisempai" target="_blank" class="ta-cta"
+                    style="font-size:.62rem;padding:.32rem 1rem;opacity:1;animation:none;">Soutenir →</a>
+            </div>
+            <div class="ta-wallet">
+                <div class="ta-wallet-label">ETH — Ethereum</div>
+                <div class="ta-wallet-addr">0xfFbEC59f9c180B65D69048db29c97A2114305D26</div>
+                <button class="ta-wallet-btn"
+                    onclick="copyWallet(this,'0xfFbEC59f9c180B65D69048db29c97A2114305D26')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        style="width:11px;height:11px;">
+                        <rect x="9" y="9" width="13" height="13" rx="2" />
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                    </svg>
+                    Copier l'adresse
+                </button>
+            </div>
+            <div class="ta-wallet">
+                <div class="ta-wallet-label">BTC — Bitcoin</div>
+                <div class="ta-wallet-addr">bc1qv0pp8q8ukufkrcz572hs2v05jp97mznzmwn08e</div>
+                <button class="ta-wallet-btn"
+                    onclick="copyWallet(this,'bc1qv0pp8q8ukufkrcz572hs2v05jp97mznzmwn08e')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        style="width:11px;height:11px;">
+                        <rect x="9" y="9" width="13" height="13" rx="2" />
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                    </svg>
+                    Copier l'adresse
+                </button>
+            </div>
+            <div class="ta-wallet">
+                <div class="ta-wallet-label">SOL — Solana</div>
+                <div class="ta-wallet-addr">3rNkGv2589KhjMM7nnEeU227j2paT4T5dR5fGBpSiTUv</div>
+                <button class="ta-wallet-btn"
+                    onclick="copyWallet(this,'3rNkGv2589KhjMM7nnEeU227j2paT4T5dR5fGBpSiTUv')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        style="width:11px;height:11px;">
+                        <rect x="9" y="9" width="13" height="13" rx="2" />
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                    </svg>
+                    Copier l'adresse
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ─── RETOUR ─── -->
+    <section
+        style="padding:2rem 3.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;border-top:1px solid var(--border);">
+        <a href="projects.html"
+            style="font-family:var(--font-mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);text-decoration:none;transition:opacity .2s;"
+            onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">← Retour aux projets</a>
+        <span
+            style="font-family:var(--font-mono);font-size:.62rem;letter-spacing:.1em;color:var(--muted);">⚠️ Projet éducatif. Pas un conseil financier.</span>
+    </section>
+
+    <footer>
+        <div class="f-left">
+            <span class="f-logo">LASS</span>
+            <span class="f-copy">© 2025 · Tous droits réservés</span>
+        </div>
+        <div class="f-right">
+            <a href="about.html">À propos</a>
+            <a href="projects.html">Projets</a>
+            <a href="skills.html">Skills</a>
+            <a href="contact.html">Contact</a>
+        </div>
+    </footer>
+
+    <script src="main.js"></script>
+    <script>
+        function copyInstall() {
+            const raw = `git clone https://github.com/TNK-Sempai/TNK-ADAPTIVE.git\ncd TNK-ADAPTIVE\npython -m pip install -r requirements.txt\npython main.py\n# Dashboard → http://localhost:5000`;
+            const btn = document.getElementById('copyBtn');
+            navigator.clipboard.writeText(raw).then(() => {
+                btn.textContent = '✓ Copié';
+                btn.style.color = 'var(--accent)';
+                btn.style.borderColor = 'rgba(200,240,96,.4)';
+                setTimeout(() => {
+                    btn.textContent = 'Copier';
+                    btn.style.color = '';
+                    btn.style.borderColor = '';
+                }, 2200);
+            });
+        }
+
+        function copyWallet(btn, addr) {
+            const orig = btn.innerHTML;
+            navigator.clipboard.writeText(addr).then(() => {
+                btn.textContent = '✓ Copié';
+                btn.style.color = 'var(--accent)';
+                btn.style.borderColor = 'rgba(200,240,96,.4)';
+                setTimeout(() => {
+                    btn.innerHTML = orig;
+                    btn.style.color = '';
+                    btn.style.borderColor = '';
+                }, 2200);
+            });
+        }
+    </script>
+</body>
+
+</html>
